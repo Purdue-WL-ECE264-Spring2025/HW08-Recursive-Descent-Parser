@@ -12,22 +12,23 @@ void skip_whitespace(struct stream *s) {
 struct token peek(struct stream *s) {
   skip_whitespace(s);
   if (s->pos == s->length)
-    return (struct token){.type = EOF, .start = NULL, .length = 0};
+    return (struct token){.type = TOK_EOF, .start = NULL, .length = 0};
   switch (s->text[s->pos]) {
   case '(':
     return (struct token){
-        .type = LPAREN, .start = s->text + s->pos, .length = 1};
+        .type = TOK_LPAREN, .start = s->text + s->pos, .length = 1};
   case ')':
     return (struct token){
-        .type = RPAREN, .start = s->text + s->pos, .length = 1};
+        .type = TOK_RPAREN, .start = s->text + s->pos, .length = 1};
   case '+':
   case '-':
   case '*':
     return (struct token){
-        .type = BINOP, .start = s->text + s->pos, .length = 1};
+        .type = TOK_BINOP, .start = s->text + s->pos, .length = 1};
   default:
     if (!isnumber(s->text[s->pos])) {
-      fprintf(stderr, "Unrecognized symbol at position %d\n", s->pos);
+      fprintf(stderr, "Unrecognized symbol at position %d: %s\n", s->pos,
+              s->text + s->pos);
       exit(1);
     }
 
@@ -35,7 +36,7 @@ struct token peek(struct stream *s) {
     for (i = 0; isnumber(s->text[s->pos + i]); i++)
       ;
     return (struct token){
-        .type = LITERAL, .start = s->text + s->pos, .length = i};
+        .type = TOK_LITERAL, .start = s->text + s->pos, .length = i};
   }
 }
 

@@ -27,7 +27,7 @@ factor := int | '(' expr ')'
 #include <stddef.h>
 
 enum parse_result { PARSE_SUCCESS, PARSE_FAILURE };
-enum token_type { LPAREN, RPAREN, BINOP, LITERAL, EOF };
+enum token_type { TOK_LPAREN, TOK_RPAREN, TOK_BINOP, TOK_LITERAL, TOK_EOF };
 
 struct stream {
   const char *text;
