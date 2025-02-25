@@ -12,9 +12,6 @@
  * factor := int | '(' expr ')'
  */
 
-// You can get some partial credit for a correct implementation of
-// expr/expr_rest, term/term_rest, or factor
-
 #ifndef INSTRUCTOR_EXPR
 enum parse_result parse_expr(struct stream *s) {
   if (parse_term(s) == PARSE_FAILURE) {
