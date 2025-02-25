@@ -9,6 +9,9 @@ void skip_whitespace(struct stream *s) {
     s->pos++;
 }
 
+// mac sucks lmao
+int _isnumber(int c) { return '0' <= c && c <= '9'; }
+
 struct token peek(struct stream *s) {
   skip_whitespace(s);
   if (s->pos == s->length)
@@ -26,14 +29,14 @@ struct token peek(struct stream *s) {
     return (struct token){
         .type = TOK_BINOP, .start = s->text + s->pos, .length = 1};
   default:
-    if (!isnumber(s->text[s->pos])) {
+    if (!_isnumber(s->text[s->pos])) {
       fprintf(stderr, "Unrecognized symbol at position %d: %s\n", s->pos,
               s->text + s->pos);
       exit(1);
     }
 
     int i;
-    for (i = 0; isnumber(s->text[s->pos + i]); i++)
+    for (i = 0; _isnumber(s->text[s->pos + i]); i++)
       ;
     return (struct token){
         .type = TOK_LITERAL, .start = s->text + s->pos, .length = i};
