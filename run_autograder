@@ -5,3 +5,4 @@ cp /autograder/submission/hw08.c /autograder/source/hw08.c
 
 cd /autograder/source
 python3 run_tests.py
+

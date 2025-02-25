@@ -1,5 +1,4 @@
 import glob
-import os
 import subprocess
 from gradescope_utils.autograder_utils.files import check_submitted_files # type: ignore
 
@@ -12,14 +11,6 @@ instructor_name = {
     "f": "`Factor`"
 }
 
-# def print_return(f):
-#     def wrapped(*args, **kwargs):
-#         ret = f(*args, **kwargs)
-#         print(ret)
-#         return ret
-#     return wrapped
-
-# @print_return
 def try_test(test_name: str, exe: str, filename: str, expected: str):
     bin_name = f"./hw08.{exe}.out" if exe else "./hw08.out"
     result = subprocess.run(f"{bin_name} {filename}", shell=True, capture_output=True, text=True)
@@ -32,9 +23,6 @@ def try_test(test_name: str, exe: str, filename: str, expected: str):
             "output": f"Used instructor {' '.join(instructor_name[x] for x in exe)}" if exe else ""
         }
         
-    # if result.returncode:
-    #     print(f"Return code: {result.returncode}")
-    #     print(result.stdout)
     return False
 
 def run_testcase(filename: str, expected: str):
@@ -95,8 +83,9 @@ def run_tests():
     test_results = []
     for f in test_files:
         test_results.append(run_testcase(f, "Invalid" if "invalid" in f else "Valid"))
+    
         
-    return test_results
+    return {"tests": test_results}
         
     
     
@@ -104,4 +93,4 @@ def run_tests():
 
 if __name__ == '__main__':
     import json
-    json.dump(run_tests(), open("results.json", "w"))
+    json.dump(run_tests(), open("/autograder/results/results.json", "w"))
