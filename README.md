@@ -2,9 +2,42 @@
 
 ## Learning Goals
 
-In this assignment, you will learn a basic parsing technique called _recursive descent parsing_, and implement a recursive descent parser that determines whether a string is a valid arithmetic expression.
+In this assignment, you will learn about _mutual recursion_, and use it to implement a basic parsing technique called _recursive descent parsing_ to determine whether a string is a valid arithmetic expression.
+
+## Mutual Recursion
+
+Most of the examples of recursion you've seen in class involve a single function calling itself on smaller subproblems (e.g. `factorial` calling itself on smaller integers, or `mergesort` calling itself on smaller arrays).
+**Mutual recursion** is a generalization of this concept that allows _multiple functions to call each other_ (for instance, `foo` calls `bar` and `bar` calls `foo`).
+
+While ordinary recursion breaks an instance of a problem `A` into a family of smaller instances of the _same_ problem `A`, mutual recursion is useful for modeling situations in which breaking down an instance of `A` yields a smaller instance of a _different_ problem `B`, but `B` can further be broken down into small instances of `A`.
+For a (contrived) example, consider the following pair of mutually recursive procedures that determine whether a number is odd or even:
+
+```
+
+int is_even(int n) {
+  // base case
+  if (n == 0) return true;
+  // recursive case
+  return is_odd(n - 1);
+}
+
+int is_odd(int n) {
+  // base case
+  if (n == 0) return false;
+  // recursive case
+  return is_even(n - 1);
+}
+```
+
+Here, `is_even` is problem `A` and `is_odd` is problem `B`. While `is_even` has an ordinary base case, the recursive call does not generate a smaller instance of `is_even`, as in normal recursion!
+
+> **Note 1:** Our example above has two functions that call each other, but in general, there's no limit to the number of mutually recursive functions you can have: `foo` might call `bar` which calls `baz` which calls `foo`.
+
+> **Note 2:** While many problems are better modeled using mutual recursion (parsing being the canonical example), it is _not more powerful than ordinary recursion_. That is, a set of mutually recursive functions can always be converted into a single ordinary recursive function that takes an extra parameter to decide which of `foo`, `bar`, etc. to dispatch to.
 
 ## Background
+
+A natural problem to apply mutual recursion to is that of determining whether a given string forms a valid arithmetic expression. The individual problems correspond to kinds of expressions (e.g. a `factor` in a product or a `term` in a sum), and the mutual recursion allows these expressions to nest arbitrarily deep.
 
 For our purposes, we define valid arithmetic expressions as being built out of integers, the operations `+`, `-`, and `*`, and optional parentheses.
 More formally, we define them with the following rules:
@@ -20,6 +53,15 @@ factor := int | '(' expr ')'
 ```
 
 > **Terminology**: The set of rules defining what strings are valid is called a _grammar_, and each individual rule is called a _production_. Symbols that appear on the left side of a production are called _nonterminals_ (for example, `expr` and `expr_rest` are nonterminals); all other symbols are called `terminals` (for example, `'+'` and `int` are terminals).
+
+> **Notation**: The `|` operator is a shorthand for combining multiple variants of the same production. For example, the single rule `A := B | C` represents the two productions:
+>
+> ```
+> A := B
+> A := C
+> ```
+>
+> and means that a valid `A` can consist of either a `B` or a `C`.
 
 These productions recursively define a class of valid strings for each nonterminal.
 For example, the first production says an `expr` consists of a `term` followed by an `expr_rest`, and the second production says an `expr_rest` consists of one of the following _variants_:
