@@ -3,6 +3,8 @@
 #include <string.h>
 
 /**
+ * Grammar:
+ *
  * expr := term expr_rest
  * expr_rest := '+' expr | '-' expr | {}
  *
@@ -31,8 +33,12 @@ enum parse_result parse_term_rest(struct stream *s) { return PARSE_SUCCESS; }
 enum parse_result parse_factor(struct stream *s) { return PARSE_FAILURE; }
 #endif
 
+// You do NOT need to modify this function!
 enum parse_result is_valid_expr(const char *expr) {
+  // Create the stream
   struct stream s = {.text = expr, .pos = 0, .length = strlen(expr)};
+
+  // Try to parse an expr and make sure there's nothing left to parse
   if (parse_expr(&s) == PARSE_SUCCESS && next(&s).type == TOK_EOF) {
     return PARSE_SUCCESS;
   }
